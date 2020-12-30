@@ -25,6 +25,8 @@ abstract class FormsContract {
 
   /// Opens a native insert form with [data] preloaded
   Future<Contact> openContactInsertForm(Contact data);
+
+  Future<Contact> openContactInsertOrEditForm(Contact data);
 }
 
 abstract class ContactsContract implements FormsContract {
@@ -129,6 +131,20 @@ class ContactService implements ContactsContract {
   Future<Contact> openContactInsertForm([Contact data]) async {
     final map =
         await channel.invokeMethod('openContactInsertForm', data?.toMap());
+    if (map["success"] == true) {
+      final contact = Contact.of(map["contact"] ?? <String, dynamic>{}, mode);
+      _log.info("Saved contact: ${contact.identifier}");
+      return contact;
+    } else {
+      _log.info("Contact form was not saved: ${map["code"] ?? 'unknown'}");
+      return null;
+    }
+  }
+
+  @override
+  Future<Contact> openContactInsertOrEditForm([Contact data]) async {
+    final map =
+    await channel.invokeMethod('openContactInsertOrEditForm', data?.toMap());
     if (map["success"] == true) {
       final contact = Contact.of(map["contact"] ?? <String, dynamic>{}, mode);
       _log.info("Saved contact: ${contact.identifier}");

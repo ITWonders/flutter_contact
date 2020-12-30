@@ -80,6 +80,24 @@ class FlutterContactForms(private val plugin: FlutterContactPlugin, private val 
         }
     }
 
+    fun openContactInsertOrEditForm(result: Result, mode: ContactMode, contact: Contact) {
+        try {
+            this.result = result
+            val intent = Intent(Intent.ACTION_INSERT_OR_EDIT, mode.contentUri).apply {
+                type = ContactsContract.Contacts.CONTENT_ITEM_TYPE
+            }
+            contact.applyToIntent(intent)
+            intent.putExtra("finishActivityOnSaveCompleted", true)
+            startIntent(intent, REQUEST_OPEN_CONTACT_FORM)
+        } catch (e: MethodCallException) {
+            result.error(e.code, "Error with ${e.method}: ${e.error}", e.error)
+            this.result = null
+        } catch (e: Exception) {
+            result.error(ErrorCodes.UNKNOWN_ERROR, "Problem opening contact form", "$e")
+            this.result = null
+        }
+    }
+
     private fun startIntent(intent: Intent, request: Int) {
         if (registrar.activity() != null) {
             registrar.activity().startActivityForResult(intent, request)

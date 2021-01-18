@@ -48,7 +48,8 @@ public class SwiftFlutterContactPlugin: NSObject, FlutterPlugin {
                                   CNContactPhoneNumbersKey,
                                   CNContactPostalAddressesKey,
                                   CNContactSocialProfilesKey,
-                                  CNContactUrlAddressesKey]
+                                  CNContactUrlAddressesKey
+                                  CNContactNoteKey]
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         

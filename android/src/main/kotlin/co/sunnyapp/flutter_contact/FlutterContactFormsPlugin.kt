@@ -67,7 +67,9 @@ class FlutterContactForms(private val plugin: FlutterContactPlugin, private val 
     fun openContactInsertForm(result: Result, mode: ContactMode, contact: Contact) {
         try {
             this.result = result
-            val intent = Intent(Intent.ACTION_INSERT, mode.contentUri)
+            val intent = Intent(Intent.ACTION_INSERT_OR_EDIT, mode.contentUri).apply {
+                type = ContactsContract.Contacts.CONTENT_ITEM_TYPE
+            }
             contact.applyToIntent(intent)
             intent.putExtra("finishActivityOnSaveCompleted", true)
             startIntent(intent, REQUEST_OPEN_CONTACT_FORM)
